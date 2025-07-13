@@ -39,7 +39,10 @@ git clone https://github.com/browser-use/macOS-use.git && cd macOS-use
 
 Don't forget API key <br>Supported providers: [OAI](https://platform.openai.com/docs/quickstart), [Anthropic](https://docs.anthropic.com/en/api/admin-api/apikeys/get-api-key) or [Gemini](https://ai.google.dev/gemini-api/docs/api-key) (deepseek R1 coming soon!)
 
-<br> At the moment, macOS-use works best with OAI or Anthropic API, although Gemini is free. While Gemini works great too, it is not as reliable.
+**🆕 NEW: Local Inference with MLX-Swift!** <br>
+Now you can run macOS-use completely locally using Apple's MLX framework - no API keys required! See the [MLX-Swift Integration Guide](MLX_SWIFT_GUIDE.md) for setup instructions.
+
+<br> At the moment, macOS-use works best with OAI or Anthropic API, although Gemini is free. While Gemini works great too, it is not as reliable. For privacy and cost-free operation, use MLX-Swift local inference.
 <br>
 
 ```bash

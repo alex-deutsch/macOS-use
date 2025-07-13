@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  macos-use:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: macos-use-app
+    environment:
+      - DISPLAY=:99
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - ANONYMIZED_TELEMETRY=false
+      - BROWSER_USE_LOGGING_LEVEL=info
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    ports:
+      - "7860:7860"  # For Gradio app
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    
+  # X11 server for GUI applications (if needed)
+  xvfb:
+    image: selenium/standalone-chrome:latest
+    container_name: macos-use-xvfb
+    environment:
+      - DISPLAY=:99
+    ports:
+      - "4444:4444"
+      - "7900:7900"  # VNC port for viewing
+    shm_size: 2gb

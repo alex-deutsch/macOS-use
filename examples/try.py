@@ -5,6 +5,13 @@ from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+# Import MLX-Swift support
+try:
+    from mlx_use.llm import create_mlx_chat_model
+    MLX_AVAILABLE = True
+except ImportError:
+    MLX_AVAILABLE = False
+
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import argparse
@@ -28,6 +35,13 @@ def set_llm(llm_provider:str = None):
 	if llm_provider == "anthropic" and os.getenv('ANTHROPIC_API_KEY'):
 		return ChatAnthropic(model='claude-3-sonnet-20240229', api_key=SecretStr(os.getenv('ANTHROPIC_API_KEY')))
 	
+	if llm_provider == "mlx" and MLX_AVAILABLE:
+		return create_mlx_chat_model(
+			model_name="qwen2.5-7b-instruct",
+			temperature=0.7,
+			max_tokens=2048
+		)
+	
 	return None
 
 # Try to set LLM based on available API keys
@@ -38,9 +52,12 @@ elif os.getenv('OPENAI_API_KEY'):
 	llm = set_llm('OAI')
 elif os.getenv('ANTHROPIC_API_KEY'):
 	llm = set_llm('anthropic')
+elif MLX_AVAILABLE:
+	print("No API keys found. Using MLX-Swift for local inference...")
+	llm = set_llm('mlx')
 
 if not llm:
-	raise ValueError("No API keys found. Please set at least one of GEMINI_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY in your .env file")
+	raise ValueError("No API keys found and MLX-Swift is not available. Please set at least one of GEMINI_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY in your .env file, or install mlx-swift for local inference.")
 
 controller = Controller()
 
